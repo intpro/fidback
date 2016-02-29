@@ -1,7 +1,7 @@
 <?php namespace Interpro\Fidback\Laravel\Handle;
 
 use Interpro\Fidback\Concept\Desk;
-use Interpro\QuickStorage\Concept\Command\RegisterMessageCommand;
+use Interpro\Fidback\Concept\Command\RegisterMessageCommand;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 

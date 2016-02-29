@@ -1,6 +1,6 @@
-<?php namespace Interpro\QuickStorage\Concept\Command;
+<?php namespace Interpro\Fidback\Concept\Command;
 
-class RegisterMessageCommand extends Command {
+class RegisterMessageCommand {
 
     public $type_name;
     public $data_arr;
