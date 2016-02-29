@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Interpro\\ImageFileLogic\\": "src/"
+            "Interpro\\Fidback\\": "src/"
         }
     },
     "extra": {
