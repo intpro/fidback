@@ -4,7 +4,7 @@ namespace Interpro\Fidback\Laravel\Http;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
-use Interpro\QuickStorage\Concept\Command\RegisterMessageCommand;
+use Interpro\Fidback\Concept\Command\RegisterMessageCommand;
 
 class FidbackController extends Controller
 {
