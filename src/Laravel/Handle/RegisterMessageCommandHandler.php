@@ -5,7 +5,7 @@ use Interpro\Fidback\Concept\Command\RegisterMessageCommand;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
-class ReinitGroupCommandHandler {
+class RegisterMessageCommandHandler {
 
     private $desc;
 
