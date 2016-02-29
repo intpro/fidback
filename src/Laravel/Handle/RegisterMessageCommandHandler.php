@@ -1,9 +1,11 @@
 <?php namespace Interpro\Fidback\Laravel\Handle;
 
+use Illuminate\Support\Facades\Bus;
 use Interpro\Fidback\Concept\Desk;
 use Interpro\Fidback\Concept\Command\RegisterMessageCommand;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Interpro\QuickStorage\Concept\Command\UpdateGroupItemCommand;
 
 class RegisterMessageCommandHandler {
 
@@ -39,25 +41,32 @@ class RegisterMessageCommandHandler {
         $username  = config('fidback')['mail_username'];
         $site_name = config('fidback')['site_name'];
 
-        if($inqueue)
-        {
-            Mail::queue('back/mail',
-                ['message'=>$message],
-                function($message) use ($username, $mailto, $site_name)
-                {
-                    $message->from($username, 'Site');
-                    $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
+        try {
 
-                },'mailqueue');
-        }else{
-            Mail::send('back/mail',
-                ['message'=>$message],
-                function($message) use ($username, $mailto, $site_name)
-                {
-                    $message->from($username, 'Site');
-                    $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
+            if($inqueue)
+            {
+                Mail::queue('back/mail',
+                    ['message'=>$message],
+                    function($message) use ($username, $mailto, $site_name)
+                    {
+                        $message->from($username, 'Site');
+                        $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
+                        Bus::dispatch(new UpdateGroupItemCommand($message->id_field, ['bools'=>['mailed'=>true]]));
 
-                });
+                    },'mailqueue');
+            }else{
+                Mail::send('back/mail',
+                    ['message'=>$message],
+                    function($message) use ($username, $mailto, $site_name)
+                    {
+                        $message->from($username, 'Site');
+                        $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
+
+                        Bus::dispatch(new UpdateGroupItemCommand($message->id_field, ['bools'=>['mailed'=>true]]));
+
+                    });
+            }
+        } catch(\Exception $exception) {
         }
 
     }
