@@ -6,19 +6,23 @@ use Interpro\Fidback\Concept\Command\RegisterMessageCommand;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Interpro\QuickStorage\Concept\Command\UpdateGroupItemCommand;
+use Interpro\QuickStorage\Concept\Exception\WrongBlockFieldNameException;
+use Interpro\QuickStorage\Concept\QueryAgent;
 
 class RegisterMessageCommandHandler {
 
     private $desc;
+    private $queryAgent;
 
     /**
      * Update the command handler.
      *
      * @return void
      */
-    public function __construct(Desk $desk)
+    public function __construct(Desk $desk, QueryAgent $queryAgent)
     {
         $this->desk = $desk;
+        $this->queryAgent = $queryAgent;
     }
 
     /**
@@ -35,11 +39,50 @@ class RegisterMessageCommandHandler {
         //и подписку на события
         //а пока:
 
-        $inqueue   = config('fidback')['inqueue'];
+        $block = $this->queryAgent->getBlock('fidback',[],[]);
 
-        $mailto    = config('fidback')['mail_rec'];
-        $username  = config('fidback')['mail_username'];
-        $site_name = config('fidback')['site_name'];
+        //------------------
+        try{
+            $inqueue  = $block->inqueue_field;
+            if(!$inqueue)
+            {
+                $inqueue = config('fidback')['inqueue'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $inqueue = config('fidback')['inqueue'];
+        }
+        //------------------
+        try{
+            $mailto  = $block->mail_rec_field;
+            if(!$mailto)
+            {
+                $mailto = config('fidback')['mail_rec'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $mailto = config('fidback')['mail_rec'];
+        }
+        //------------------
+        try{
+            $username  = $block->mail_username_field;
+            if(!$username)
+            {
+                $username = config('fidback')['mail_username'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $username = config('fidback')['mail_username'];
+        }
+        //------------------
+        try{
+            $site_name  = $block->site_name_field;
+            if(!$site_name)
+            {
+                $site_name = config('fidback')['site_name'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $site_name = config('fidback')['site_name'];
+        }
+        //------------------
+
 
         try {
 
