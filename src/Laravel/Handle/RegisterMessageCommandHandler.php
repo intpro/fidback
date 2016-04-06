@@ -83,33 +83,36 @@ class RegisterMessageCommandHandler {
         }
         //------------------
 
-
-        try {
+        try
+        {
+            $message_id = $message->id_field;
 
             if($inqueue)
             {
                 Mail::queue('back/mail',
                     ['message'=>$message],
-                    function($message) use ($username, $mailto, $site_name)
+                    function($message) use ($username, $mailto, $site_name, $message_id)
                     {
                         $message->from($username, 'Site');
                         $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
-                        Bus::dispatch(new UpdateGroupItemCommand($message->id_field, ['bools'=>['mailed'=>true]]));
+                        Bus::dispatch(new UpdateGroupItemCommand($message_id, ['bools'=>['mailed'=>true]]));
 
                     },'mailqueue');
             }else{
                 Mail::send('back/mail',
                     ['message'=>$message],
-                    function($message) use ($username, $mailto, $site_name)
+                    function($message) use ($username, $mailto, $site_name, $message_id)
                     {
                         $message->from($username, 'Site');
                         $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
 
-                        Bus::dispatch(new UpdateGroupItemCommand($message->id_field, ['bools'=>['mailed'=>true]]));
+                        Bus::dispatch(new UpdateGroupItemCommand($message_id, ['bools'=>['mailed'=>true]]));
 
                     });
             }
-        } catch(\Exception $exception) {
+        }catch(\Exception $Exc)
+        {
+            Log::info($Exc->getMessage());
         }
 
     }
