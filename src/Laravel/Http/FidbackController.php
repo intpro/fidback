@@ -32,7 +32,7 @@ class FidbackController extends Controller
         }
     }
 
-    public function sendMessage()
+    public function sendMessage($template)
     {
         if(Request::has('type_name'))
         {
@@ -40,7 +40,7 @@ class FidbackController extends Controller
 
             try {
 
-                $this->dispatch(new RegisterMessageCommand($dataobj['type_name'], $dataobj));
+                $this->dispatch(new RegisterMessageCommand($dataobj['type_name'], $dataobj, $template));
 
                 return ['status' => 'OK'];
 
