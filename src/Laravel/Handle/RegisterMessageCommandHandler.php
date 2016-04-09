@@ -89,7 +89,7 @@ class RegisterMessageCommandHandler {
 
             if($inqueue)
             {
-                Mail::queue('back/mail',
+                Mail::queue('back/mail/'.$command->template,
                     ['item'=>$message],
                     function($message) use ($username, $mailto, $site_name, $message_id)
                     {
@@ -99,7 +99,7 @@ class RegisterMessageCommandHandler {
 
                     },'mailqueue');
             }else{
-                Mail::send('back/mail',
+                Mail::send('back/mail/'.$command->template,
                     ['item'=>$message],
                     function($message) use ($username, $mailto, $site_name, $message_id)
                     {

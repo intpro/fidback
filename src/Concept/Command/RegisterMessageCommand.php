@@ -4,6 +4,7 @@ class RegisterMessageCommand {
 
     public $type_name;
     public $data_arr;
+    public $template;
 
     /**
      * Create a new command instance.
@@ -13,10 +14,11 @@ class RegisterMessageCommand {
      *
      * @return void
      */
-    public function __construct($type_name, $data_arr)
+    public function __construct($type_name, $data_arr, $template)
     {
         $this->type_name = $type_name;
         $this->data_arr = $data_arr;
+        $this->template = $template;
     }
 
 }
