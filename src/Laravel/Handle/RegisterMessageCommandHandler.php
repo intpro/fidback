@@ -90,7 +90,7 @@ class RegisterMessageCommandHandler {
             if($inqueue)
             {
                 Mail::queue('back/mail',
-                    ['message'=>$message],
+                    ['item'=>$message],
                     function($message) use ($username, $mailto, $site_name, $message_id)
                     {
                         $message->from($username, 'Site');
@@ -100,7 +100,7 @@ class RegisterMessageCommandHandler {
                     },'mailqueue');
             }else{
                 Mail::send('back/mail',
-                    ['message'=>$message],
+                    ['item'=>$message],
                     function($message) use ($username, $mailto, $site_name, $message_id)
                     {
                         $message->from($username, 'Site');
