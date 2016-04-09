@@ -32,13 +32,15 @@ class FidbackController extends Controller
         }
     }
 
-    public function sendMessage($template)
+    public function sendMessage()
     {
         if(Request::has('type_name'))
         {
             $dataobj = Request::all();
 
             try {
+
+                $template = $dataobj['type_name'];
 
                 $this->dispatch(new RegisterMessageCommand($dataobj['type_name'], $dataobj, $template));
 
