@@ -19,9 +19,9 @@ class RegisterMessageCommandHandler {
      *
      * @return void
      */
-    public function __construct(Desk $desk, QueryAgent $queryAgent)
+    public function __construct(Desk $desc, QueryAgent $queryAgent)
     {
-        $this->desk = $desk;
+        $this->desc = $desc;
         $this->queryAgent = $queryAgent;
     }
 
@@ -33,9 +33,9 @@ class RegisterMessageCommandHandler {
      */
     public function handle(RegisterMessageCommand $command)
     {
-        $message = $this->desk->registerMessage($command->type_name, $command->data_arr);
+        $message = $this->desc->registerMessage($command->type_name, $command->data_arr);
 
-        //Потом переписать под генерацию событий самим desk объектом
+        //Потом переписать под генерацию событий самим desc объектом
         //и подписку на события
         //а пока:
 
