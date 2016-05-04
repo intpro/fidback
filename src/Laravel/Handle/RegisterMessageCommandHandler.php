@@ -52,6 +52,7 @@ class RegisterMessageCommandHandler {
             $inqueue = config('fidback')['inqueue'];
         }
         //------------------
+
         try{
             $mailto  = $block->mail_rec_field;
             if(!$mailto)
@@ -62,6 +63,37 @@ class RegisterMessageCommandHandler {
             $mailto = config('fidback')['mail_rec'];
         }
         //------------------
+        try{
+            $mailto_copy1  = $block->mail_rec_copy1_field;
+            if(!$mailto_copy1)
+            {
+                $mailto_copy1 = config('fidback')['mail_rec_copy1'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $mailto_copy1 = config('fidback')['mail_rec_copy1'];
+        }
+        //------------------
+        try{
+            $mailto_copy2  = $block->mail_rec_copy2_field;
+            if(!$mailto_copy2)
+            {
+                $mailto_copy2 = config('fidback')['mail_rec_copy2'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $mailto_copy2 = config('fidback')['mail_rec_copy2'];
+        }
+        //------------------
+        try{
+            $mailto_copy3  = $block->mail_rec_copy3_field;
+            if(!$mailto_copy3)
+            {
+                $mailto_copy3 = config('fidback')['mail_rec_copy3'];
+            }
+        }catch(WrongBlockFieldNameException $exc){
+            $mailto_copy3 = config('fidback')['mail_rec_copy3'];
+        }
+        //------------------
+
         try{
             $username  = $block->mail_username_field;
             if(!$username)
@@ -91,20 +123,41 @@ class RegisterMessageCommandHandler {
             {
                 Mail::queue('back/mail/'.$command->template,
                     ['item'=>$message],
-                    function($message) use ($username, $mailto, $site_name, $message_id)
+                    function($message) use ($username, $mailto, $mailto_copy1, $mailto_copy2, $mailto_copy3, $site_name, $message_id)
                     {
-                        $message->from($username, 'Site');
-                        $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
+                        $message->from($username, $site_name);
+                        $message->to($mailto);
+                        if($mailto_copy1){
+                            $message->cc($mailto_copy1);
+                        }
+                        if($mailto_copy2){
+                            $message->cc($mailto_copy2);
+                        }
+                        if($mailto_copy3){
+                            $message->cc($mailto_copy3);
+                        }
+                        $message->subject('Сообщение из сайта '.$site_name);
+
                         Bus::dispatch(new UpdateGroupItemCommand($message_id, ['bools'=>['mailed'=>true]]));
 
                     },'mailqueue');
             }else{
                 Mail::send('back/mail/'.$command->template,
                     ['item'=>$message],
-                    function($message) use ($username, $mailto, $site_name, $message_id)
+                    function($message) use ($username, $mailto, $mailto_copy1, $mailto_copy2, $mailto_copy3, $site_name, $message_id)
                     {
-                        $message->from($username, 'Site');
-                        $message->to($mailto, 'Admin')->subject('Сообщение из сайта '.$site_name);
+                        $message->from($username, $site_name);
+                        $message->to($mailto);
+                        if($mailto_copy1){
+                            $message->cc($mailto_copy1);
+                        }
+                        if($mailto_copy2){
+                            $message->cc($mailto_copy2);
+                        }
+                        if($mailto_copy3){
+                            $message->cc($mailto_copy3);
+                        }
+                        $message->subject('Сообщение из сайта '.$site_name);
 
                         Bus::dispatch(new UpdateGroupItemCommand($message_id, ['bools'=>['mailed'=>true]]));
 
