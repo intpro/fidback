@@ -28,7 +28,7 @@ class FidbackController extends Controller
 
         } catch(\Exception $exception) {
 
-            return ['status'=>('Что-то пошло не так. '.$exception->getMessage())];
+            return ['status'=>($exception->getMessage())];
         }
     }
 
@@ -47,7 +47,7 @@ class FidbackController extends Controller
                 return ['status' => 'OK'];
 
             } catch(\Exception $exception) {
-                return ['status' => ('Что-то пошло не так. '.$exception->getMessage())];
+                return ['status' => ($exception->getMessage())];
             }
         } else {
 
